@@ -1,0 +1,9 @@
+[package]
+name = "xalliance-rules"
+version = "0.1.0"
+edition = "2021"
+authors = ["gorynich_"]
+
+[dependencies]
+itertools = "0.12"
+serde = { version = "1.0", features = ["derive"] }

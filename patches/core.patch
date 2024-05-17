@@ -1,0 +1,36 @@
+diff --git a/Mindustry/core/src/mindustry/net/Net.java b/Mindustry/core/src/mindustry/net/Net.java
+index ef69c39..14f8a52 100644
+--- a/Mindustry/core/src/mindustry/net/Net.java
++++ b/Mindustry/core/src/mindustry/net/Net.java
+@@ -303,6 +303,7 @@ public class Net{
+      */
+     public void handleServerReceived(NetConnection connection, Packet object){
+         object.handled();
++        mindustry.XAlliance.handleServerReceived(connection, object);
+ 
+         try{
+             //handle object normally
+diff --git a/Mindustry/core/src/mindustry/XAlliance.java b/Mindustry/core/src/mindustry/XAlliance.java
+new file mode 100644
+index 0000000..6427cb5
+--- /dev/null
++++ b/Mindustry/core/src/mindustry/XAlliance.java
+@@ -0,0 +1,18 @@
++package mindustry;
++
++import arc.util.Log;
++import mindustry.gen.*;
++import mindustry.net.*;
++import mindustry.net.Packets.*;
++
++public class XAlliance {
++    static {
++        System.loadLibrary("xalliance_jni");
++    }
++
++    public static void info(String str) {
++        Log.info(str);
++    }
++
++    public static native void handleServerReceived(NetConnection connection, Packet object);
++}
