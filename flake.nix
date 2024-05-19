@@ -24,7 +24,7 @@
           naersk' = pkgs.callPackage naersk {};
 
         in rec {
-          default = naersk'.buildPackage {
+          rust = naersk'.buildPackage {
             src = ./.;
             copyLibs = true;
           };
@@ -32,16 +32,17 @@
           core = pkgs.mindustry-server.overrideAttrs (prev:{
             postFixup = ''
               wrapProgram $out/bin/mindustry-server \
-                --set LD_LIBRARY_PATH ${default}/lib
+                --set LD_LIBRARY_PATH ${rust}/lib
             '';
 
             patches = prev.patches ++ [ ./patches/core.patch ];
           });
-        });
+        }
+      );
 
       hydraJobs = {
-        default = forAllSystems (system: pkgs:
-          packages.${system}.default
+        rust = forAllSystems (system: pkgs:
+          packages.${system}.rust
         );
 
         core = forAllSystems (system: pkgs:
