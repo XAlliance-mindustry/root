@@ -1,3 +1,0 @@
-[submodule "master-server"]
-	path = master-server
-	url = git@github.com:XAlliance-mindustry/master-server.git
