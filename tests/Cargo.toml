@@ -1,11 +1,13 @@
 [package]
-name = "xalliance-jni"
+name = "tests"
 version = "0.1.0"
 edition = "2021"
-authors = ["gorynich_"]
+publish = false
 
 [dependencies]
 xalliance-netcode = { path = "../netcode" }
+xalliance-master-server = { path = "../master-server" }
+xalliance-jni = { path = "../jni" }
 
 thiserror = { workspace = true }
 serde = { workspace = true }
@@ -15,7 +17,5 @@ futures = { workspace = true }
 tokio = { workspace = true }
 tarpc = { workspace = true }
 
-jni = "0.21"
-
-[lib]
-crate_type = ["cdylib", "lib"]
+[[test]]
+name = "netcode"

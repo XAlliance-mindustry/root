@@ -2,4 +2,6 @@
 .envrc
 target
 result
-/config
+outputs
+tmp
+config

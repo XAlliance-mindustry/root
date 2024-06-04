@@ -50,7 +50,7 @@ pub struct RuleInfo {
     pub duration: Duration,
 }
 
-const fn days(num: u64) -> Duration {
+pub const fn days(num: u64) -> Duration {
     Duration::from_secs(num * 24 * 60 * 60)
 }
 

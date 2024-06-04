@@ -1,26 +1,38 @@
-diff --git a/Mindustry/core/src/mindustry/net/Net.java b/Mindustry/core/src/mindustry/net/Net.java
-index ef69c39..14f8a52 100644
---- a/Mindustry/core/src/mindustry/net/Net.java
-+++ b/Mindustry/core/src/mindustry/net/Net.java
-@@ -303,6 +303,7 @@ public class Net{
-      */
-     public void handleServerReceived(NetConnection connection, Packet object){
-         object.handled();
-+        mindustry.XAlliance.handleServerReceived(connection, object);
+diff --git a/Mindustry/core/src/mindustry/Vars.java b/Mindustry/core/src/mindustry/Vars.java
+index 0dc1cf9..108482b 100644
+--- a/Mindustry/core/src/mindustry/Vars.java
++++ b/Mindustry/core/src/mindustry/Vars.java
+@@ -86,7 +86,7 @@ public class Vars implements Loadable{
+     /** max chat message length */
+     public static final int maxTextLength = 150;
+     /** max player name length in bytes */
+-    public static final int maxNameLength = 40;
++    public static final int maxNameLength = 160;
+     /** displayed item size when ingame. */
+     public static final float itemSize = 5f;
+     /** units outside this bound will die instantly */
+@@ -336,6 +336,7 @@ public class Vars implements Loadable{
  
-         try{
-             //handle object normally
+         mods.load();
+         maps.load();
++        mindustry.XAlliance.init();
+     }
+ 
+     /** Checks if a launch failure occurred.
 diff --git a/Mindustry/core/src/mindustry/XAlliance.java b/Mindustry/core/src/mindustry/XAlliance.java
 new file mode 100644
-index 0000000..6427cb5
+index 0000000..7a01e5a
 --- /dev/null
 +++ b/Mindustry/core/src/mindustry/XAlliance.java
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,28 @@
 +package mindustry;
 +
++import arc.Core;
 +import arc.util.Log;
++import mindustry.Vars;
 +import mindustry.gen.*;
-+import mindustry.net.*;
++import mindustry.net.NetConnection;
++import mindustry.net.Packet;
 +import mindustry.net.Packets.*;
 +
 +public class XAlliance {
@@ -28,9 +40,32 @@ index 0000000..6427cb5
 +        System.loadLibrary("xalliance_jni");
 +    }
 +
-+    public static void info(String str) {
-+        Log.info(str);
++    public static void handleServerReceivedInjected(NetConnection connection, Packet object) {
++        Core.app.post(() -> {
++            try {
++                Vars.net.handleServerReceivedInjected(connection, object);
++            } catch (Throwable e) {
++                Log.err(e);
++            }
++        });
 +    }
 +
-+    public static native void handleServerReceived(NetConnection connection, Packet object);
++    public static native void init();
++    public static native boolean handleServerReceived(NetConnection connection, Packet object);
 +}
+diff --git a/Mindustry/core/src/mindustry/net/Net.java b/Mindustry/core/src/mindustry/net/Net.java
+index ef69c39..6769d4c 100644
+--- a/Mindustry/core/src/mindustry/net/Net.java
++++ b/Mindustry/core/src/mindustry/net/Net.java
+@@ -303,7 +303,10 @@ public class Net{
+      */
+     public void handleServerReceived(NetConnection connection, Packet object){
+         object.handled();
+-
++        if (!mindustry.XAlliance.handleServerReceived(connection, object))
++            handleServerReceivedInjected(connection, object);
++    }
++    public void handleServerReceivedInjected(NetConnection connection, Packet object){
+         try{
+             //handle object normally
+             if(serverListeners.get(object.getClass()) != null){

@@ -5,6 +5,8 @@ edition = "2021"
 authors = ["gorynich_"]
 
 [dependencies]
-tarpc = { version = "0.34", features = ["full"] }
-serde = "1.0"
-thiserror = "1.0"
+tarpc = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+futures = { workspace = true }
+tokio = { workspace = true }

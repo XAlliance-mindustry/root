@@ -49,11 +49,5 @@
           packages.${system}.core
         );
       };
-
-      devShells = forAllSystems (system: pkgs: {
-        default = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [ rustc cargo ];
-        };
-      });
     };
 }
